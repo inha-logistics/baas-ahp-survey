@@ -914,6 +914,7 @@ function updateNav(){
 
 function go(s){
   flagShown=false; flagStep=-1;
+  if(state.step>=2) sendPartial();
   state.step=Math.max(0,Math.min(STEPS.length-1,s));
   save(); render();
   window.scrollTo({top:0,behavior:"instant"});
@@ -1009,28 +1010,53 @@ function validateStep(){
 
 /* ═══════════════ 렌더 : 척도 ═══════════════ */
 /* key: 저장 키, A/B: 항목명, onPick: 콜백 */
-/* 지정한 순위와 방향이 어긋나면 그 자리에서 짧게 알린다 */
-function warnDirection(i, j, v, nameA, nameB){
+/* 지정한 순위와 방향이 어긋나면 그 문항 박스에 바로 표시한다 */
+/* 순위를 바꾸면 이미 답한 문항들의 방향 표시를 다시 매긴다 */
+function refreshDirMarks(){
+  if(!(state.step>=3 && state.step<=3+BIGS.length)) return;
+  const isBig = state.step===3;
+  const items = isBig ? BIGS : TASKS[BIGS[state.step-4]].map(t=>t.t);
+  const store = isBig ? state.big : state.task;
+  const key   = isBig ? "" : BIGS[state.step-4]+"|";
+  document.querySelectorAll(".pair[data-key]").forEach(p=>{
+    const k=p.dataset.key.replace(key,"");
+    const m=k.match(/^(\d+)-(\d+)$/); if(!m) return;
+    const i=+m[1], j=+m[2], v=store[key+i+"-"+j];
+    if(v==null){
+      const old=p.querySelector(".pairwarn.live"); if(old) old.remove();
+      p.classList.remove("flag","flagdir"); return;
+    }
+    markDirection(p, i, j, v, items[i], items[j]);
+  });
+}
+
+function markDirection(wrap, i, j, v, nameA, nameB){
+  const old=wrap.querySelector(".pairwarn.live"); if(old) old.remove();
+  wrap.classList.remove("flag","flagdir");
+
   if(!(state.step>=3 && state.step<=3+BIGS.length)) return;
   const n  = state.step===3 ? BIGS.length : TASKS[BIGS[state.step-4]].length;
   const rk = rankValues(n).map(x=>x?Number(x):null);
   if(rk[i]==null || rk[j]==null || rk[i]===rk[j]) return;
 
-  const hi   = rk[i]<rk[j] ? i : j;                 // 상위 순위
-  const lo   = rk[i]<rk[j] ? j : i;
-  const nm   = k => (k===i ? nameA : nameB);
-  const short= s => String(s).length>14 ? String(s).slice(0,13)+"…" : String(s);
+  const hi = rk[i]<rk[j] ? i : j;
+  const lo = rk[i]<rk[j] ? j : i;
+  const nm = k => (k===i ? nameA : nameB);
+  let msg="";
 
   if(v===1){
-    toast(rk[hi]+"위와 "+rk[lo]+"위인데 «같다»로 답하셨습니다");
-    return;
-  }
-  const dirA = v>1, rankA = rk[i]<rk[j];
-  if(dirA!==rankA){
-    toast(rk[lo]+"위 "+short(nm(lo))+" 쪽이 더 중요하다고 답하셨습니다 · 순위와 반대입니다");
+    msg = rk[hi]+"위와 "+rk[lo]+"위인데 «같다»로 답하셨습니다";
   }else{
-    hideToast();   // 바르게 고치면 안내를 바로 내린다
+    const dirA = v>1, rankA = rk[i]<rk[j];
+    if(dirA!==rankA)
+      msg = rk[lo]+"위 «"+esc(nm(lo))+"» 쪽이 더 중요하다고 답하셨습니다 · 지정한 순위와 반대입니다";
   }
+  if(!msg) return;
+
+  wrap.classList.add("flag","flagdir");
+  const w=el("div","pairwarn dir live");
+  w.innerHTML="<b>방향 확인</b>"+msg;
+  wrap.appendChild(w);
 }
 
 function scaleRow(key, store, idxA, idxB, nameA, nameB, qno, onChange){
@@ -1065,7 +1091,7 @@ function scaleRow(key, store, idxA, idxB, nameA, nameB, qno, onChange){
       wrap.classList.add("done"); wrap.classList.remove("miss");
       save(); renderProgress(); updateNav();
       if(onChange) onChange();
-      warnDirection(idxA, idxB, val, nameA, nameB);
+      markDirection(wrap, idxA, idxB, val, nameA, nameB);
     };
     btns.appendChild(inp); btns.appendChild(lab);
   });
@@ -1099,8 +1125,10 @@ function crBox(getMatrix, n){
     ls.innerHTML="";
     // 이전 경고 제거
     document.querySelectorAll(".pair.flag").forEach(p=>{
+      const live=p.querySelector(".pairwarn.live");
       p.classList.remove("flag","flagdir","flagdeg");
-      const t=p.querySelector(".pairwarn"); if(t) t.remove();
+      p.querySelectorAll(".pairwarn:not(.live)").forEach(t=>t.remove());
+      if(live) p.classList.add("flag","flagdir");
     });
     box.style.display="none";
     const A=getMatrix();
@@ -1238,6 +1266,7 @@ function rankTable(items, store, key){
       msg.className = "rankmsg " + (st.ok ? "ok" : "warn");
     }
     if(window.__crbox) window.__crbox.update();
+    refreshDirMarks();
     renderRankBar(); updateNav(); syncDebug();
   };
   items.forEach((name,i)=>{
@@ -1769,6 +1798,25 @@ function payload(){
   };
 }
 
+/* 단계를 마칠 때마다 진행 상황을 시트에 보낸다 (개인정보 동의 이후에만) */
+function sendPartial(){
+  if(!ENDPOINT || ENDPOINT.indexOf("PASTE_YOUR")===0) return;
+  if(location.protocol==="file:") return;
+  if(!state.info || !state.info.agree) return;      // 동의 전에는 전송하지 않음
+  if(state.sent) return;
+  const names=["","응답자 정보","BaaS 개념·응답 방법","대분류 비교"]
+    .concat(BIGS.map(b=>b+" 과제"));
+  try{
+    fetch(ENDPOINT,{ method:"POST", mode:"no-cors", keepalive:true,
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify({
+        partial:true, sid:state.sid, startedAt:state.startedAt,
+        stepLabel: names[state.step] || ("단계 "+state.step),
+        answered: answeredCount(), info: state.info
+      })});
+  }catch(e){}
+}
+
 async function submit(){
   const btn=$("#btnSend");
   if(ENDPOINT.indexOf("PASTE_YOUR")===0){
@@ -1836,6 +1884,8 @@ function render(){
   if(s===2) watchGuide(); else stopGuide();
   if(s>=3 && s<=3+BIGS.length) watchRankBar(); else stopRankBar();
 }
+
+window.addEventListener("pagehide", ()=>{ if(state.step>=3) sendPartial(); });
 
 (function init(){
   if(location.protocol==="file:"){
