@@ -148,16 +148,17 @@ input[type=text]:focus,select:focus{outline:2px solid var(--ice);outline-offset:
   .sc .side{font-size:9.5px;padding:0 4px}
   .sc .btns label{min-height:40px;font-size:11px}
   .pair{padding:13px}
-  .pair .items{grid-template-columns:1fr;gap:7px}
+  /* 좁은 화면에서도 좌·우 한 줄로 나란히 */
+  .pair .items{grid-template-columns:1fr 1fr;gap:8px;align-items:stretch}
   .pair .vs{display:none}
-  /* 좌·우 어느 쪽인지 바로 보이도록 A/B 표시와 정렬을 유지 */
-  .pair .it{position:relative;padding:7px 10px 7px 34px;border-radius:9px;
-    background:#F6F8FA;border:1px solid var(--line);font-size:13.5px}
-  .pair .it::before{content:"A";position:absolute;left:8px;top:7px;
-    width:19px;height:19px;border-radius:50%;background:var(--navy);color:#fff;
-    font-size:10.5px;font-weight:700;line-height:19px;text-align:center}
-  .pair .it.r{text-align:right;padding:7px 34px 7px 10px}
-  .pair .it.r::before{content:"B";left:auto;right:8px;background:#4A3E8F}
+  .pair .it{position:relative;padding:22px 8px 7px;border-radius:9px;
+    background:#F6F8FA;border:1px solid var(--line);font-size:12.5px;line-height:1.4}
+  .pair .it::before{content:"A";position:absolute;left:7px;top:5px;
+    width:16px;height:16px;border-radius:50%;background:var(--navy);color:#fff;
+    font-size:9.5px;font-weight:700;line-height:16px;text-align:center}
+  .pair .it.r{text-align:right}
+  .pair .it.r::before{content:"B";left:auto;right:7px;background:#4A3E8F}
+  .pair .it .idx{display:none}
 }
 
 /* ── 순위 입력 ── */
