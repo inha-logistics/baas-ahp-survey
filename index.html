@@ -822,7 +822,6 @@ function gotoFirstFlag(){
     p.classList.remove("pulse"); void p.offsetWidth; p.classList.add("pulse");
     setTimeout(()=>p.classList.remove("pulse"),2400);
   });
-  toast("조정이 필요한 문항 "+list.length+"개를 표시했습니다");
 }
 
 function renderRankBar(){
@@ -1031,8 +1030,8 @@ function refreshDirMarks(){
 }
 
 function markDirection(wrap, i, j, v, nameA, nameB){
-  const old=wrap.querySelector(".pairwarn.live"); if(old) old.remove();
-  wrap.classList.remove("flag","flagdir");
+  wrap.querySelectorAll(".pairwarn").forEach(w=>w.remove());
+  wrap.classList.remove("flag","flagdir","flagdeg");
 
   if(!(state.step>=3 && state.step<=3+BIGS.length)) return;
   const n  = state.step===3 ? BIGS.length : TASKS[BIGS[state.step-4]].length;
@@ -1124,10 +1123,12 @@ function crBox(getMatrix, n){
   box.update=()=>{
     ls.innerHTML="";
     // 이전 경고 제거
-    document.querySelectorAll(".pair.flag").forEach(p=>{
+    document.querySelectorAll(".pair").forEach(p=>{
       const live=p.querySelector(".pairwarn.live");
       p.classList.remove("flag","flagdir","flagdeg");
-      p.querySelectorAll(".pairwarn:not(.live)").forEach(t=>t.remove());
+      p.querySelectorAll(".pairwarn").forEach((t,idx)=>{
+        if(!(live && t===live)) t.remove();      // 실시간 방향 표시 하나만 유지
+      });
       if(live) p.classList.add("flag","flagdir");
     });
     box.style.display="none";
@@ -1153,9 +1154,9 @@ function crBox(getMatrix, n){
     const bad=conflictPairs(n);
     if(bad.length){
       // 부호·강도는 항상, 가중치 기반 진단은 「다음」을 눌러 조정을 택한 뒤에만
-      bad.filter(x=> x.kind==="dir" || flagShown ).forEach(x=>{
+      bad.filter(x=> x.kind!=="dir" && flagShown ).forEach(x=>{
         const p=document.querySelector('.pair[data-key="'+x.key+'"]');
-        if(p){
+        if(p && !p.querySelector(".pairwarn")){
           p.classList.add("flag", x.kind==="dir"?"flagdir":"flagdeg");
           const w=el("div","pairwarn"+(x.kind==="dir"?" dir":""));
           w.innerHTML="<b>"+(x.kind==="dir"?"방향 확인":"강도 확인")+"</b>"+x.msg;
@@ -1881,6 +1882,7 @@ function render(){
   else if(s>=4 && s<=3+BIGS.length) app.appendChild(viewTasks(s-4));
   else app.appendChild(viewReview());
   renderProgress(); renderNav(); renderRankBar(); syncResetBtn(); bindDebugToggle(); syncDebug();
+  if(s>=3 && s<=3+BIGS.length) refreshDirMarks();   // 화면을 새로 그려도 방향 표시를 유지
   if(s===2) watchGuide(); else stopGuide();
   if(s>=3 && s<=3+BIGS.length) watchRankBar(); else stopRankBar();
 }
