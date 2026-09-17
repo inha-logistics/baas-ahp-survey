@@ -148,9 +148,16 @@ input[type=text]:focus,select:focus{outline:2px solid var(--ice);outline-offset:
   .sc .side{font-size:9.5px;padding:0 4px}
   .sc .btns label{min-height:40px;font-size:11px}
   .pair{padding:13px}
-  .pair .items{grid-template-columns:1fr;gap:4px}
-  .pair .it.r{text-align:left}
+  .pair .items{grid-template-columns:1fr;gap:7px}
   .pair .vs{display:none}
+  /* 좌·우 어느 쪽인지 바로 보이도록 A/B 표시와 정렬을 유지 */
+  .pair .it{position:relative;padding:7px 10px 7px 34px;border-radius:9px;
+    background:#F6F8FA;border:1px solid var(--line);font-size:13.5px}
+  .pair .it::before{content:"A";position:absolute;left:8px;top:7px;
+    width:19px;height:19px;border-radius:50%;background:var(--navy);color:#fff;
+    font-size:10.5px;font-weight:700;line-height:19px;text-align:center}
+  .pair .it.r{text-align:right;padding:7px 34px 7px 10px}
+  .pair .it.r::before{content:"B";left:auto;right:8px;background:#4A3E8F}
 }
 
 /* ── 순위 입력 ── */
