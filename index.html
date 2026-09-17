@@ -77,7 +77,10 @@ hr{border:0;border-top:1px solid var(--line);margin:18px 0}
 /* ── 표지 ── */
 .hero{background:var(--navy);color:#fff;border-radius:16px;padding:30px 24px;margin:16px 0}
 .hero .org{font-size:12.5px;color:#8FA8D9;margin-bottom:14px}
-.hero h1{color:#fff;font-size:26px}
+.hero h1{color:#fff;font-size:26px;line-height:1.35}
+.hero h1 .nb{white-space:nowrap}          /* 뒷부분은 통째로 넘어가게 */
+@media(max-width:820px){ .hero h1{font-size:23px} }
+@media(max-width:560px){ .hero h1{font-size:20px} .hero h1 .nb{white-space:normal} }
 .hero .tag{display:inline-block;margin-top:12px;padding:5px 12px;border-radius:99px;
   background:rgba(202,220,252,.16);color:var(--ice);font-size:12.5px;font-weight:500}
 .notice{background:var(--alt);border:1px solid var(--line);border-radius:10px;padding:14px 16px;
@@ -561,6 +564,10 @@ function toast(msg){
   const t=$("#toast"); t.textContent=msg; t.classList.add("show");
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2200);
 }
+function hideToast(){
+  const t=$("#toast"); if(!t) return;
+  clearTimeout(toastT); t.classList.remove("show");
+}
 
 /* 쌍 목록 (n개 항목 → [i,j] 조합) */
 function pairsOf(n){
@@ -1002,6 +1009,30 @@ function validateStep(){
 
 /* ═══════════════ 렌더 : 척도 ═══════════════ */
 /* key: 저장 키, A/B: 항목명, onPick: 콜백 */
+/* 지정한 순위와 방향이 어긋나면 그 자리에서 짧게 알린다 */
+function warnDirection(i, j, v, nameA, nameB){
+  if(!(state.step>=3 && state.step<=3+BIGS.length)) return;
+  const n  = state.step===3 ? BIGS.length : TASKS[BIGS[state.step-4]].length;
+  const rk = rankValues(n).map(x=>x?Number(x):null);
+  if(rk[i]==null || rk[j]==null || rk[i]===rk[j]) return;
+
+  const hi   = rk[i]<rk[j] ? i : j;                 // 상위 순위
+  const lo   = rk[i]<rk[j] ? j : i;
+  const nm   = k => (k===i ? nameA : nameB);
+  const short= s => String(s).length>14 ? String(s).slice(0,13)+"…" : String(s);
+
+  if(v===1){
+    toast(rk[hi]+"위와 "+rk[lo]+"위인데 «같다»로 답하셨습니다");
+    return;
+  }
+  const dirA = v>1, rankA = rk[i]<rk[j];
+  if(dirA!==rankA){
+    toast(rk[lo]+"위 "+short(nm(lo))+" 쪽이 더 중요하다고 답하셨습니다 · 순위와 반대입니다");
+  }else{
+    hideToast();   // 바르게 고치면 안내를 바로 내린다
+  }
+}
+
 function scaleRow(key, store, idxA, idxB, nameA, nameB, qno, onChange){
   const cur = store[key];
   const wrap = el("div","pair"+(cur!=null?" done":""));
@@ -1034,6 +1065,7 @@ function scaleRow(key, store, idxA, idxB, nameA, nameB, qno, onChange){
       wrap.classList.add("done"); wrap.classList.remove("miss");
       save(); renderProgress(); updateNav();
       if(onChange) onChange();
+      warnDirection(idxA, idxB, val, nameA, nameB);
     };
     btns.appendChild(inp); btns.appendChild(lab);
   });
@@ -1274,7 +1306,7 @@ function viewIntro(){
   const hero=el("div","hero");
   hero.innerHTML =
     "<div class='org'>한국도로공사 발주 · 인하대학교 아태물류학부 / 물류전문대학원 수행</div>"+
-    "<h1>배터리 순환체계 도입을 위한<br>추진과제 우선순위 평가 설문</h1>"+
+    "<h1>배터리 순환체계 도입을 위한 <span class='nb'>추진과제 우선순위 평가 설문</span></h1>"+
     "<div class='tag'>전기차 시대 배터리 순환체계에 따른 고속도로 인프라 활용전략 수립 연구</div>";
   f.appendChild(hero);
 
