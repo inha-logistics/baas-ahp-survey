@@ -40,25 +40,27 @@ body{
 #rankbar{border-top:1px solid var(--line);background:rgba(240,245,246,.96);
   overflow:hidden;max-height:0;opacity:0;visibility:hidden;
   transition:max-height .28s ease,opacity .22s ease,visibility .22s}
-#rankbar.show{max-height:56px;opacity:1;visibility:visible}
+#rankbar.show{max-height:72px;opacity:1;visibility:visible}
 #rankbar.hide{max-height:0;opacity:0;visibility:hidden;border-top-color:transparent}
 @media (prefers-reduced-motion:reduce){#rankbar{transition:none}}
-#rankbar .inner{max-width:var(--maxw);margin:0 auto;padding:7px 16px;
-  display:flex;gap:10px;align-items:center}
-.rblab{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.01em}
-.rbitems{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+#rankbar .inner{max-width:var(--maxw);margin:0 auto;padding:10px 16px;
+  display:flex;gap:13px;align-items:center}
+.rblab{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--navy);letter-spacing:.01em;line-height:1.3}
+.rbitems{display:flex;gap:7px;overflow-x:auto;-webkit-overflow-scrolling:touch;
   scrollbar-width:none;padding-bottom:1px}
 .rbitems::-webkit-scrollbar{display:none}
-.rbi{flex:0 0 auto;display:inline-flex;align-items:baseline;gap:4px;
-  background:#fff;border:1px solid var(--line);border-radius:99px;padding:3px 9px;
-  font-size:11.5px;color:var(--ink);white-space:nowrap}
-.rbi b{color:var(--teal);font-weight:700;font-size:10.5px}
-.rbi.n1{border-color:#9EC0C4;background:#EAF3F4}
+.rbi{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+  background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 13px;
+  font-size:13.5px;font-weight:600;color:var(--ink);white-space:nowrap}
+.rbi b{color:#fff;background:var(--navy);font-weight:700;font-size:11px;
+  border-radius:99px;padding:2px 7px;line-height:1.35}
+.rbi.n1{border-color:var(--navy);background:#EAF3F4}
 .rbi.na{color:var(--gray)}
 @media (max-width:760px){
-  #rankbar .inner{padding:6px 12px;gap:7px}
-  .rblab{font-size:10px}
-  .rbi{font-size:10.5px;padding:2px 7px}
+  #rankbar .inner{padding:8px 12px;gap:9px}
+  .rblab{font-size:11px;max-width:52px}
+  .rbi{font-size:12px;padding:5px 10px;gap:5px}
+  .rbi b{font-size:10px;padding:2px 6px}
 }
 
 /* ── 카드 ── */
@@ -324,8 +326,8 @@ input.bad:focus{box-shadow:0 0 0 3px rgba(192,57,43,.14)}
 .cbox>div{border:1px solid var(--line);border-radius:10px;padding:15px 16px;background:#fff}
 .cbox b{display:block;font-size:14px;margin-bottom:9px}
 .cbox .ln{display:flex;gap:8px;align-items:baseline;font-size:13px;color:var(--ink);padding:4px 0}
-.cbox .ln i{flex:0 0 34px;font-style:normal;font-size:11px;font-weight:700;color:var(--teal)}
-.cbox a{color:var(--teal);text-decoration:none;word-break:break-all}
+.cbox .ln i{flex:0 0 34px;font-style:normal;font-size:11px;font-weight:700;color:var(--navy)}
+.cbox a{color:var(--navy);text-decoration:none;word-break:break-all}
 .cbox a:hover{text-decoration:underline}
 @media(max-width:560px){.cbox{grid-template-columns:1fr}}
 
@@ -340,6 +342,88 @@ input.bad:focus{box-shadow:0 0 0 3px rgba(192,57,43,.14)}
 
 #localwarn{background:#9A3412;color:#fff;font-size:12.5px;line-height:1.5;
   padding:9px 16px;text-align:center}
+
+.cri{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;align-items:baseline}
+.cri .qno{grid-row:1/3;font-size:11.5px;font-weight:700;color:#96590A;padding-top:1px}
+.cri .pair2{font-size:12.5px;color:var(--ink)}
+.cri .pair2 b{color:#14616E;font-weight:700}
+.cri .fix{display:block;color:#96590A;font-size:11.5px;margin-top:0}
+.cri.deg{border-color:#DCE4E7}
+.cri.deg .qno,.cri.deg .fix{color:#5D7078}
+
+.pair.flag{border-color:#E0B98A;background:#FFFDF9}
+.pair.flagdir{border-color:#D99A5B}
+.pairwarn{margin-top:9px;padding:8px 10px;border-radius:7px;background:#FBF1E4;
+  font-size:11.5px;line-height:1.5;color:#7A4A12}
+.pairwarn b{display:inline-block;margin-right:6px;padding:1px 7px;border-radius:99px;
+  background:#E8C79A;color:#5C3708;font-size:10.5px;font-weight:700}
+.pairwarn.dir{background:#FBE7DC}
+.pairwarn.dir b{background:#E3A986;color:#6B2E0C}
+
+.crbox.waiting{grid-template-columns:1fr;background:#F7FAFA}
+.crbox.waiting .badge{display:none}
+
+.pair.pulse{animation:flagpulse 1.1s ease-in-out 2}
+@keyframes flagpulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(201,124,42,0)}
+  50%{box-shadow:0 0 0 5px rgba(201,124,42,.22)}
+}
+@media (prefers-reduced-motion:reduce){.pair.pulse{animation:none;outline:2px solid #C97C2A;outline-offset:2px}}
+
+.filebtn{display:inline-block;margin-top:4px;padding:11px 18px;border:1px solid var(--line);
+  border-radius:9px;background:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.filebtn:hover{border-color:#A9BFC4;background:#FBFCFC}
+.gh.save{font-size:13px;padding:12px 14px}
+@media(max-width:560px){ .gh.save{padding:12px 10px;font-size:12px} }
+
+.privacy{margin-top:20px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#FAFBFC}
+.pvh{background:#EEF2F4;padding:10px 14px;font-size:13px;font-weight:700;color:var(--navy)}
+.pvb{padding:12px 14px 0;font-size:12.5px;color:var(--gray)}
+.pvl{margin:8px 0 0;padding:0 14px 0 30px;font-size:12.5px;color:#31434C;line-height:1.7}
+.pvl li{margin-bottom:3px}
+.pvl b{color:var(--navy);margin-right:5px}
+.pvn{padding:8px 14px 12px;font-size:12px;color:var(--gray)}
+.agree{display:flex;gap:10px;align-items:flex-start;padding:13px 14px;
+  border-top:1px solid var(--line);background:#fff;cursor:pointer;font-size:13.5px}
+.agree input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--navy);flex:0 0 auto;cursor:pointer}
+.agree.on{background:#F2F6FB}
+.agree .req{color:#C0392B}
+
+.resetbtn{display:inline-block;margin:10px 0 0 8px;padding:11px 18px;border:1px solid #E3C9C4;
+  border-radius:9px;background:#fff;font-size:14px;font-weight:600;color:#A0392B;cursor:pointer}
+.resetbtn:hover{background:#FDF6F5;border-color:#D9A79F}
+.card.tight .sub{margin-top:10px;margin-bottom:0}
+
+.tinyreset{margin-right:10px;padding:3px 9px;border:1px solid var(--line);border-radius:99px;
+  background:#fff;font-size:11px;color:var(--gray);cursor:pointer;vertical-align:middle}
+.tinyreset:hover{border-color:#D9A79F;color:#A0392B}
+
+.modalbg{position:fixed;inset:0;background:rgba(10,16,22,.45);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:mfade .16s ease}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modalbox{background:#fff;border-radius:13px;max-width:440px;width:100%;
+  box-shadow:0 18px 50px rgba(0,0,0,.28);overflow:hidden;animation:mrise .18s ease}
+@keyframes mrise{from{transform:translateY(8px);opacity:.6}to{transform:none;opacity:1}}
+.modalbox .mh{padding:17px 20px 0;font-size:16px;font-weight:700;color:var(--ink)}
+.modalbox .mb{padding:11px 20px 18px;font-size:14px;line-height:1.7;color:#31434C}
+.modalbox .mb b{color:var(--navy)}
+.modalbox .mf{display:flex;gap:8px;justify-content:flex-end;padding:0 16px 16px}
+.mbtn{padding:10px 18px;border-radius:9px;border:1px solid var(--line);
+  font-size:14px;font-weight:600;background:#fff;color:var(--ink);cursor:pointer}
+.mbtn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.mbtn.danger{background:#A0392B;border-color:#A0392B;color:#fff}
+.mbtn.ghost:hover{border-color:#A9BFC4}
+@media(max-width:480px){ .modalbox .mf{flex-direction:column-reverse} .mbtn{width:100%} }
+@media (prefers-reduced-motion:reduce){.modalbg,.modalbox{animation:none}}
+
+.dbgbar{display:inline-block;margin-right:10px;padding:2px 9px;border-radius:99px;
+  background:#FDF0D5;border:1px solid #E8C79A;color:#7A4A12;font-size:10.5px;
+  font-variant-numeric:tabular-nums;vertical-align:middle}
+@media(max-width:560px){
+  .dbgbar{display:block;margin:0 0 4px;font-size:10px;padding:2px 7px}
+  #topbar .pmeta{flex-wrap:wrap}
+}
 </style>
 </head>
 <body>
@@ -349,7 +433,8 @@ input.bad:focus{box-shadow:0 0 0 3px rgba(192,57,43,.14)}
   <div class="pbar"><div id="pfill"></div></div>
   <div class="pmeta">
     <span id="pstep">시작</span>
-    <span>응답 <b id="pdone">0</b> / 60</span>
+    <span><button type="button" id="btnReset" class="tinyreset hidden">처음부터</button>
+      응답 <b id="pdone">0</b> / 60</span>
   </div>
 </div>
 <div id="rankbar" class="hide"><div class="inner">
@@ -436,6 +521,15 @@ const state = {
   sid: 'S'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)
 };
 const LSKEY = "ahp_baas_v4";
+/* 주소 뒤에 ?debug 를 붙이면 확인용으로 CR 값을 화면에 표시합니다 (실제 조사에서는 보이지 않음) */
+/* ★ 확인용 CR 표시 ─────────────────────────────
+   true  : 화면에 단계별 CR 값이 보입니다 (테스트용)
+   false : 응답자에게 보이지 않습니다 (실제 조사 배포 시)
+   화면에서 「응답 N / 60」 을 빠르게 3번 눌러도 켜고 끌 수 있습니다. */
+const SHOW_CR = true;
+
+let DEBUG = SHOW_CR || /[?&]debug\b/.test(location.search) || /(^|;)\s*ahpdebug=1/.test(document.cookie);
+try{ const v=localStorage.getItem("ahp_debug"); if(v==="1") DEBUG=true; if(v==="0") DEBUG=false; }catch(e){}
 
 /* 로컬 저장 · 복원 */
 function save(){ try{ localStorage.setItem(LSKEY, JSON.stringify(state)); }catch(e){} }
@@ -533,6 +627,92 @@ function computeResult(){
 /* ═══════════════ 렌더 : 공통 ═══════════════ */
 const STEPS = ["안내","일반현황","BaaS 개념·응답 방법","대분류 비교"].concat(BIGS.map(b=>b+" 과제")).concat(["검토·제출"]);
 
+/* 화면 안에 직접 그리는 확인창 (브라우저 대화상자가 막히는 환경 대비) */
+function modal(opt){
+  const old=document.getElementById("modal"); if(old) old.remove();
+  const bg=el("div","modalbg"); bg.id="modal";
+  const bx=el("div","modalbox");
+  bx.appendChild(el("div","mh",esc(opt.title)));
+  const body=el("div","mb"); body.innerHTML=opt.html||esc(opt.text||""); bx.appendChild(body);
+  const ft=el("div","mf");
+  const b2=el("button","mbtn ghost",opt.cancel||"취소");
+  b2.onclick=()=>{ bg.remove(); if(opt.onCancel) opt.onCancel(); };
+  const b1=el("button","mbtn"+(opt.danger?" danger":" primary"),opt.ok||"확인");
+  b1.onclick=()=>{ bg.remove(); if(opt.onOk) opt.onOk(); };
+  if(opt.cancel!==false) ft.appendChild(b2);
+  ft.appendChild(b1);
+  bx.appendChild(ft);
+  bg.appendChild(bx);
+  bg.onclick=(e)=>{ if(e.target===bg){ bg.remove(); if(opt.onCancel) opt.onCancel(); } };
+  document.body.appendChild(bg);
+  setTimeout(()=>b1.focus(),50);
+}
+
+function resetAll(){
+  modal({
+    title:"처음부터 다시 시작",
+    html:"이 기기에 저장된 응답을 <b>모두 지우고</b> 처음부터 다시 시작합니다.<br>되돌릴 수 없습니다.",
+    ok:"모두 지우기", cancel:"취소", danger:true,
+    onOk:()=>{
+      try{ localStorage.removeItem(LSKEY); }catch(e){}
+      state.step=0; state.info={}; state.big={}; state.task={};
+      state.rankBig={}; state.rankTask={}; state.sent=false;
+      state.guideRead=false; state.startedAt=new Date().toISOString();
+      state.sid="S"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+      flagShown=false; flagStep=-1;
+      render(); window.scrollTo({top:0,behavior:"instant"});
+      toast("응답을 모두 지웠습니다");
+    }
+  });
+}
+/* 「응답 N / 60」 을 빠르게 3번 누르면 확인용 CR 표시가 켜지고 꺼집니다 */
+let dbgTaps=0, dbgTimer=null;
+function bindDebugToggle(){
+  const m=document.querySelector("#topbar .pmeta");
+  if(!m || m.dataset.dbgBound) return;
+  m.dataset.dbgBound="1";
+  m.style.cursor="default";
+  m.addEventListener("click",(e)=>{
+    if(e.target.closest("#btnReset")) return;
+    dbgTaps++;
+    clearTimeout(dbgTimer);
+    dbgTimer=setTimeout(()=>{ dbgTaps=0; },1200);
+    if(dbgTaps>=3){
+      dbgTaps=0;
+      DEBUG=!DEBUG;
+      try{ localStorage.setItem("ahp_debug", DEBUG?"1":"0"); }catch(e){}
+      const d=document.getElementById("dbg");
+      if(!DEBUG && d) d.remove();
+      syncDebug(); updateNav();
+      toast(DEBUG ? "확인용 CR 표시를 켰습니다" : "확인용 CR 표시를 껐습니다");
+    }
+  });
+}
+
+function syncDebug(){
+  if(!DEBUG) return;
+  let d=document.getElementById("dbg");
+  if(!d){
+    d=document.createElement("span"); d.id="dbg"; d.className="dbgbar";
+    const m=document.querySelector("#topbar .pmeta"); if(m) m.insertBefore(d, m.firstChild);
+  }
+  const out=[];
+  if(state.step>=3 && state.step<=3+BIGS.length){
+    const A = state.step===3 ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
+    out.push("이 단계 CR " + (A ? crOf(A).toFixed(3) : "–"));
+  }
+  const ab=bigMatrix(); if(ab) out.push("대분류 "+crOf(ab).toFixed(3));
+  BIGS.forEach((b,i)=>{ const A=taskMatrix(b); if(A) out.push((i+1)+"군 "+crOf(A).toFixed(3)); });
+  d.textContent = out.length ? ("확인용 · "+out.join(" / ")) : "";
+}
+
+function syncResetBtn(){
+  const b=document.getElementById("btnReset"); if(!b) return;
+  let has=false; try{ has=!!localStorage.getItem(LSKEY); }catch(e){}
+  b.classList.toggle("hidden", !(has || answeredCount()>0 || state.step>0));
+  b.onclick=resetAll;
+}
+
 function renderProgress(){
   const done=answeredCount(), tot=totalCount();
   $("#pdone").textContent=done;
@@ -549,6 +729,12 @@ function renderNav(){
   bar.innerHTML=""; hint.textContent="";
   const last=STEPS.length-1;
 
+  if(state.step>=1 && state.step<=last){
+    const sv=el("button","gh save","진행 저장");
+    sv.title="지금까지 응답한 내용을 파일로 내려받습니다";
+    sv.onclick=downloadProgress;
+    bar.appendChild(sv);
+  }
   if(state.step>0 && state.step<=last){
     const b=el("button","gh","이전");
     b.onclick=()=>go(state.step-1);
@@ -560,7 +746,39 @@ function renderNav(){
     b.id="btnNext"; b.disabled=gate;
     b.onclick=()=>{
       const m=validateStep();
-      if(m){ toast(m); return; }
+      if(m){
+        toast(m);
+        if(state.step>=3 && state.step<=3+BIGS.length){
+          flagShown=true;
+          if(window.__crbox) window.__crbox.update();
+          updateNav();
+          gotoFirstFlag();
+        }
+        return;
+      }
+
+      // 방향은 맞으나 일관성비율이 기준을 넘는 경우 : 확인 후 진행
+      if(state.step>=3 && state.step<=3+BIGS.length){
+        const n = state.step===3 ? BIGS.length : TASKS[BIGS[state.step-4]].length;
+        const A = state.step===3 ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
+        const cr = A ? crOf(A) : 0;
+        if(cr>0.1 && cr<=0.20){
+          modal({
+            title:"응답 일관성 확인",
+            html:"응답의 일관성이 기준에 조금 못 미칩니다.<br>"+
+                 "항목 간 중요도 차이를 답하신 정도가 서로 조금씩 어긋납니다.<br><br>"+
+                 "<b>조정하시겠습니까?</b>",
+            ok:"이대로 넘어가기", cancel:"조정하기",
+            onOk:()=>{ go(state.step+1); },
+            onCancel:()=>{
+              flagShown=true;
+              if(window.__crbox) window.__crbox.update();
+              updateNav(); gotoFirstFlag();
+            }
+          });
+          return;
+        }
+      }
       go(state.step+1);
     };
     bar.appendChild(b);
@@ -574,6 +792,19 @@ function renderNav(){
 }
 
 /* 순위 고정 바 — 순위 지정을 마치고 쌍대비교 영역으로 내려오면 나타남 */
+/* 조정이 필요한 첫 문항으로 이동하고 잠시 강조 */
+function gotoFirstFlag(){
+  const list=[...document.querySelectorAll(".pair.flag")];
+  if(!list.length){ toast("특정 문항을 짚기 어렵습니다. 순위와 견주어 전체 응답을 다시 살펴봐 주세요."); return; }
+  const first=list[0];
+  first.scrollIntoView({behavior:"smooth",block:"center"});
+  list.forEach(p=>{
+    p.classList.remove("pulse"); void p.offsetWidth; p.classList.add("pulse");
+    setTimeout(()=>p.classList.remove("pulse"),2400);
+  });
+  toast("조정이 필요한 문항 "+list.length+"개를 표시했습니다");
+}
+
 function renderRankBar(){
   const bar=$("#rankbar"), box=$("#rbitems");
   const inStep = state.step>=3 && state.step<=3+BIGS.length;
@@ -602,17 +833,28 @@ function renderRankBar(){
     '<span class="rbi'+(o.r===1?" n1":"")+'"><b>'+o.r+'위</b>'+esc(o.name)+'</span>').join("");
 }
 
-let rbWatcher=null;
+let rbWatcher=null, rbObserver=null;
+let flagShown=false, flagStep=-1;
+let crLastStep=-1;
 function watchRankBar(){
   stopRankBar();
   rbWatcher=()=>renderRankBar();
-  window.addEventListener("scroll",rbWatcher,{passive:true});
+  document.addEventListener("scroll",rbWatcher,{passive:true,capture:true});
   window.addEventListener("resize",rbWatcher,{passive:true});
+  if("IntersectionObserver" in window){
+    const p=document.getElementById("paircard");
+    if(p){
+      rbObserver=new IntersectionObserver(rbWatcher,
+        {threshold:[0,0.01,0.2,0.5,1], rootMargin:"-180px 0px 0px 0px"});
+      rbObserver.observe(p);
+    }
+  }
 }
 function stopRankBar(){
   if(!rbWatcher) return;
-  window.removeEventListener("scroll",rbWatcher);
+  document.removeEventListener("scroll",rbWatcher,{capture:true});
   window.removeEventListener("resize",rbWatcher);
+  if(rbObserver){ rbObserver.disconnect(); rbObserver=null; }
   rbWatcher=null;
 }
 
@@ -634,11 +876,17 @@ function updateNav(){
     if(rs.dup)            { msg="중요도 순위가 중복되었습니다"; block=true; }
     else if(rs.filled<rs.n){ msg="중요도 순위를 모두 지정해 주십시오 ("+rs.filled+" / "+rs.n+")"; block=true; }
     else if(miss>0)       { msg="쌍대비교 "+miss+"개 문항이 남았습니다"; block=true; }
-    else if(cr>0.1)       { msg="CR "+cr.toFixed(3)+" · 0.1 이하가 되도록 응답을 조정해 주십시오"; block=true; }
-    else                  { msg="CR "+cr.toFixed(3)+" · 이 단계를 마쳤습니다"; }
+    else {
+      // 「다음」을 누르기 전에는 어떤 표시도 하지 않는다
+      const bad=conflictPairs(n);
+      const shown=bad.filter(x=> x.kind==="dir" || flagShown).length;
+      if(shown){ msg="표시된 문항 "+shown+"개를 확인해 주십시오"; }
+      else { msg="이 단계 응답을 모두 마쳤습니다"; }
+      if(DEBUG && A) msg = "[확인용] CR "+crOf(A).toFixed(3)+" · "+msg;
+    }
     hint.textContent=msg;
-    hint.className = block ? "hint warn" : "hint ok";
-    const b=$("#btnNext"); if(b){ b.disabled=block; b.textContent=block?"조건을 충족해 주세요":"다음"; }
+    hint.className = block ? "hint warn" : ((flagShown && A && conflictPairs(n).length) ? "hint warn" : "hint ok");
+    const b=$("#btnNext"); if(b){ b.disabled=block; b.textContent=block?"조정이 필요합니다":"다음"; }
   } else {
     hint.textContent=""; hint.className="hint";
   }
@@ -690,13 +938,13 @@ function watchGuide(){
     if(bottom) markGuideRead();
   };
   guideWatcher=check;
-  window.addEventListener("scroll",check,{passive:true});
+  document.addEventListener("scroll",check,{passive:true,capture:true});
   window.addEventListener("resize",check,{passive:true});
   setTimeout(check,300);   // 화면이 짧아 스크롤이 없는 경우
 }
 function stopGuide(){
   if(!guideWatcher) return;
-  window.removeEventListener("scroll",guideWatcher);
+  document.removeEventListener("scroll",guideWatcher,{capture:true});
   window.removeEventListener("resize",guideWatcher);
   guideWatcher=null;
 }
@@ -711,6 +959,8 @@ function validateStep(){
       return "휴대전화를 01#-####-#### 형식으로 입력해 주세요";
     if(!RE_EMAIL.test(String(state.info.email).trim()))
       return "이메일 형식이 올바르지 않습니다. @ 를 포함한 주소를 입력해 주세요";
+    if(!state.info.agree)
+      return "개인정보 수집·이용에 동의해 주셔야 다음 단계로 넘어갈 수 있습니다";
     return null;
   }
   if(state.step===2 && !guideDone()){
@@ -723,9 +973,11 @@ function validateStep(){
     if(rs.filled<rs.n)      return "중요도 순위를 모두 지정해 주십시오";
     const m0=missingInStep();
     if(m0>0)                return "응답하지 않은 문항이 "+m0+"개 있습니다";
-    const A = state.step===3 ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
-    if(A && crOf(A)>0.1)    return "일관성비율(CR)이 0.1을 초과했습니다. 응답을 조정해 주십시오";
-    return null;
+    const dir0=conflictPairs(n).filter(x=>x.kind==="dir");
+    if(dir0.length)         return "순위와 방향이 반대인 문항 "+dir0.length+"개를 수정해 주십시오";
+    const A0 = state.step===3 ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
+    if(A0 && crOf(A0)>0.20)  return "응답 간 어긋남이 커서 이대로 진행할 수 없습니다. 표시된 문항을 조정해 주십시오";
+    return null;   // CR 초과는 다음 단계에서 확인 후 진행
   }
   if(state.step>=3){
     const m=missingInStep();
@@ -785,6 +1037,12 @@ function scaleRow(key, store, idxA, idxB, nameA, nameB, qno, onChange){
 }
 
 /* CR 표시 박스 */
+function answeredInStep(){
+  if(state.step===3) return Object.keys(state.big).length;
+  const b=BIGS[state.step-4];
+  return Object.keys(state.task).filter(k=>k.indexOf(b+"|")===0).length;
+}
+
 function crBox(getMatrix, n){
   const box=el("div","crbox");
   const bd=el("span","badge na","CR 산출 대기");
@@ -793,9 +1051,21 @@ function crBox(getMatrix, n){
   box.appendChild(bd); box.appendChild(tx); box.appendChild(ls);
   box.update=()=>{
     ls.innerHTML="";
+    // 이전 경고 제거
+    document.querySelectorAll(".pair.flag").forEach(p=>{
+      p.classList.remove("flag","flagdir","flagdeg");
+      const t=p.querySelector(".pairwarn"); if(t) t.remove();
+    });
+    box.style.display="none";
     const A=getMatrix();
-    if(!A){ bd.className="badge na"; bd.textContent="CR 산출 대기";
-      tx.textContent="모든 문항에 응답하면 일관성비율(CR)이 계산됩니다."; return; }
+    if(!A){
+      box.classList.add("waiting");
+      const done = answeredInStep(), need = n*(n-1)/2;
+      bd.className="badge na"; bd.textContent="";
+      tx.textContent = "쌍대비교 "+done+" / "+need+" 문항 응답";
+      return;
+    }
+    box.classList.remove("waiting");
     const cr=crOf(A);
     const ok=cr<=0.1;
     bd.className="badge "+(ok?"ok":"no");
@@ -804,18 +1074,19 @@ function crBox(getMatrix, n){
       tx.textContent="응답이 일관되게 유지되었습니다. 다음 단계로 진행해 주십시오.";
       return;
     }
-    tx.textContent="일관성비율이 0.1을 초과하여 다음 단계로 넘어갈 수 없습니다. 아래 문항을 순위와 맞게 조정해 주십시오.";
+    tx.textContent="일관성비율이 0.1을 초과했습니다. 표시된 문항을 순위와 맞게 조정하시면 정확도가 높아집니다. 그대로 진행하실 수도 있습니다.";
     // 지정한 순위와 방향이 어긋난 문항 찾기
     const bad=conflictPairs(n);
     if(bad.length){
-      const ttl=el("div","crlt","지정한 순위와 방향이 다른 문항");
-      ls.appendChild(ttl);
-      bad.forEach(x=>{
-        const d=el("div","cri");
-        d.innerHTML="<b>Q"+String(x.q).padStart(2,"0")+"</b> "
-          +esc(x.a)+" <span class='vs'>vs</span> "+esc(x.b)
-          +"<span class='fix'>"+esc(x.msg)+"</span>";
-        ls.appendChild(d);
+      // 부호·강도는 항상, 가중치 기반 진단은 「다음」을 눌러 조정을 택한 뒤에만
+      bad.filter(x=> x.kind==="dir" || flagShown ).forEach(x=>{
+        const p=document.querySelector('.pair[data-key="'+x.key+'"]');
+        if(p){
+          p.classList.add("flag", x.kind==="dir"?"flagdir":"flagdeg");
+          const w=el("div","pairwarn"+(x.kind==="dir"?" dir":""));
+          w.innerHTML="<b>"+(x.kind==="dir"?"방향 확인":"강도 확인")+"</b>"+x.msg;
+          p.appendChild(w);
+        }
       });
     }
   };
@@ -824,32 +1095,67 @@ function crBox(getMatrix, n){
   return box;
 }
 
-/* 순위와 쌍대비교 방향이 어긋난 문항 목록 */
+/* 지정한 순위와 맞지 않는 문항 찾기 — 방향과 강도를 함께 점검 */
 function conflictPairs(n){
   const isBig = state.step===3;
-  const items = isBig ? BIGS : TASKS[BIGS[state.step-4]].map(t=>t.t);
+  const items = isBig ? BIGS : TASKS[BIGS[state.step-4]].map(t=>t.short||t.t);
   const store = isBig ? state.big : state.task;
   const key   = isBig ? "" : BIGS[state.step-4]+"|";
   const rk    = rankValues(n).map(v=>v?Number(v):null);
   const out=[]; let q=0;
+
   for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
     q++;
     const v = store[key+i+"-"+j];
-    if(v==null || rk[i]==null || rk[j]==null) continue;
-    // 순위 숫자가 작을수록 중요
-    const rankSaysA = rk[i] < rk[j];
-    const cmpSaysA  = v > 1;      // v>1 이면 A(i)가 중요
-    const equal     = v === 1;
-    if(rk[i]===rk[j]) continue;
-    if(equal){
-      out.push({q, a:items[i], b:items[j],
-        msg:"순위가 다르므로 «같다»는 어색합니다"});
-    } else if(rankSaysA !== cmpSaysA){
-      out.push({q, a:items[i], b:items[j],
-        msg:(rankSaysA?rk[i]:rk[j])+"위가 더 중요하도록 방향을 바꿔 주십시오"});
+    if(v==null || rk[i]==null || rk[j]==null || rk[i]===rk[j]) continue;
+
+    const hiIdx = rk[i]<rk[j] ? i : j;          // 상위 순위 쪽
+    const loIdx = rk[i]<rk[j] ? j : i;
+    const gap   = Math.abs(rk[i]-rk[j]);        // 순위 차이 1~4
+    const 권장  = [0,3,4,6,8][gap] || 3;         // 1칸差→③, 2칸→④, 3칸→⑥, 4칸→⑧
+    const 강도  = Math.abs(v);                   // 응답한 강도 1~9
+    const dirA  = v > 1;                        // 응답이 A(i)를 더 중요하다고 했는지
+    const rankA = rk[i] < rk[j];
+
+    const tag = (idx)=> "<b>"+rk[idx]+"위</b> "+esc(items[idx]);
+    const pkey = key+i+"-"+j;
+
+    if(v === 1){
+      out.push({q, key:pkey, kind:"dir",
+        html: tag(hiIdx)+" <span class='vs'>vs</span> "+tag(loIdx),
+        msg: "순위가 다른데 «같다»로 답하셨습니다"});
+    } else if(dirA !== rankA){
+      out.push({q, key:pkey, kind:"dir",
+        html: tag(hiIdx)+" <span class='vs'>vs</span> "+tag(loIdx),
+        msg: "지정한 순위와 방향이 반대입니다"});
+    } else if(Math.abs(강도-권장) >= 2){
+      out.push({q, key:pkey, kind:"deg",
+        html: tag(hiIdx)+" <span class='vs'>vs</span> "+tag(loIdx),
+        msg: "순위 차이는 "+gap+"칸인데 "+CIRC[강도]+"로 답하셨습니다 · 차이에 비해 "+(강도<권장?"약합니다":"강합니다")});
     }
   }
-  return out;
+  // 순위로는 설명되지 않는 경우 : 도출된 가중치와 가장 어긋난 문항을 찾는다
+  if(!out.length){
+    const A = isBig ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
+    if(A && crOf(A)>0.1){
+      const w=weightsOf(A), dev=[]; let qq=0;
+      for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+        qq++;
+        const d=Math.abs(Math.log(A[i][j]) - Math.log(w[i]/w[j]));
+        dev.push({q:qq, i, j, d});
+      }
+      dev.sort((a,b)=>b.d-a.d);
+      dev.slice(0,2).forEach(x=>{
+        const hi = rk[x.i]<rk[x.j] ? x.i : x.j, lo = rk[x.i]<rk[x.j] ? x.j : x.i;
+        const tag=(k)=> "<b>"+rk[k]+"위</b> "+esc(items[k]);
+        out.push({q:x.q, key:key+x.i+"-"+x.j, kind:"wgt",
+          html: tag(hi)+" <span class='vs'>vs</span> "+tag(lo),
+          msg: "다른 문항의 응답과 견주면 이 문항의 강도가 어긋납니다"});
+      });
+    }
+  }
+  // 방향 오류를 먼저 보여준다
+  return out.sort((a,b)=> (a.kind===b.kind ? a.q-b.q : (a.kind==="dir"?-1:1)));
 }
 
 /* 중요도 순위 입력 (필수) */
@@ -886,7 +1192,7 @@ function rankTable(items, store, key){
       msg.className = "rankmsg " + (st.ok ? "ok" : "warn");
     }
     if(window.__crbox) window.__crbox.update();
-    renderRankBar(); updateNav();
+    renderRankBar(); updateNav(); syncDebug();
   };
   items.forEach((name,i)=>{
     const r=el("div","rr");
@@ -909,6 +1215,44 @@ function rankTable(items, store, key){
 }
 
 /* ═══════════════ 단계별 화면 ═══════════════ */
+/* ═══════════════ 진행 저장 · 이어하기 ═══════════════ */
+function saveFileName(){
+  const nm=(state.info && state.info.name) ? state.info.name.replace(/[^\w가-힣]/g,"") : "응답";
+  const d=new Date(), p=n=>String(n).padStart(2,"0");
+  return "AHP_진행저장_"+nm+"_"+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+"_"+p(d.getHours())+p(d.getMinutes())+".json";
+}
+function downloadProgress(){
+  const done=answeredCount();
+  const pack={ _type:"BAAS_AHP_PROGRESS", _ver:1, savedAt:new Date().toISOString(), answered:done, state:state };
+  const blob=new Blob([JSON.stringify(pack,null,1)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=saveFileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  toast("진행 상황을 저장했습니다 ("+done+" / 60문항)");
+}
+function loadProgress(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      const s=(p && p._type==="BAAS_AHP_PROGRESS") ? p.state : p;
+      if(!s || typeof s!=="object" || !("big" in s) || !("task" in s))
+        throw new Error("형식이 맞지 않습니다");
+      if(s.sent) throw new Error("이미 제출이 끝난 파일입니다");
+      Object.assign(state, s);
+      save(); render();
+      toast("이전 응답을 불러왔습니다 ("+answeredCount()+" / 60문항)");
+      window.scrollTo({top:0,behavior:"instant"});
+    }catch(e){
+      modal({title:"파일을 읽을 수 없습니다",
+        html:"이 설문에서 내려받은 진행 저장 파일(.json)이 맞는지 확인해 주십시오.",
+        ok:"확인", cancel:false});
+    }
+  };
+  r.readAsText(file);
+}
+
 function viewIntro(){
   const f=document.createDocumentFragment();
 
@@ -938,6 +1282,30 @@ function viewIntro(){
     "<span>오관용 연구원 / 010-9557-8018<br>ogy0114@inha.edu</span></div>";
   c5.appendChild(ct);
   f.appendChild(c5);
+
+  const c6=el("div","card tight");
+  c6.appendChild(el("h2",null,"진행하던 응답 이어서 하기"));
+  c6.appendChild(el("p","sub","이전에 저장해 두신 진행 파일(.json)이 있으시면 불러와 이어서 응답하실 수 있습니다. 다른 기기에서 저장하신 파일도 사용하실 수 있습니다."));
+  const lb=el("label","filebtn","저장한 파일 불러오기");
+  const fi=el("input"); fi.type="file"; fi.accept=".json,application/json"; fi.style.display="none";
+  fi.onchange=()=>{ if(fi.files && fi.files[0]) loadProgress(fi.files[0]); fi.value=""; };
+  lb.appendChild(fi);
+  c6.appendChild(lb);
+
+  // 이 기기에 저장된 응답이 있으면 초기화 버튼을 함께 보여준다
+  let hasSaved=false;
+  try{ hasSaved = !!localStorage.getItem(LSKEY); }catch(e){}
+  if(hasSaved || answeredCount()>0){
+    const rs=el("button","resetbtn","처음부터 다시 시작");
+    rs.onclick=()=>{
+      if(!confirm("이 기기에 저장된 응답을 모두 지우고 처음부터 다시 시작합니다.\n\n계속하시겠습니까?")) return;
+      try{ localStorage.removeItem(LSKEY); }catch(e){}
+      location.reload();
+    };
+    c6.appendChild(rs);
+    c6.appendChild(el("p","sub","이 기기에 작성 중인 응답이 있습니다. 새로 시작하시려면 위 버튼을 눌러 주십시오."));
+  }
+  f.appendChild(c6);
 
   return f;
 }
@@ -1001,6 +1369,29 @@ function viewInfo(){
     g.appendChild(box);
   });
   c.appendChild(g);
+
+  /* 개인정보 수집·이용 동의 (필수) */
+  const pv=el("div","privacy");
+  pv.innerHTML =
+    "<div class='pvh'>개인정보 수집 및 이용 안내</div>"+
+    "<div class='pvb'>「개인정보 보호법」 제15조에 따라 아래와 같이 수집·이용합니다.</div>"+
+    "<ul class='pvl'>"+
+    "<li><b>수집 항목</b> 성명 · 소속 · 부서·직위 · 전문분야 · 경력 · 휴대전화 · 이메일</li>"+
+    "<li><b>이용 목적</b> 응답자 확인과 소속 유형별 구분, 개별 식별이 불가능한 형태의 통계 분석, 전문가 활용비 지급 안내</li>"+
+    "<li><b>보유 기간</b> 연구 종료 및 지급 처리 완료 시 지체 없이 파기 (제3자 제공 없음)</li>"+
+    "</ul>"+
+    "<div class='pvn'>※ 동의를 거부하실 수 있으나, 이 경우 조사 참여가 제한됩니다.</div>";
+  const agLab=el("label","agree");
+  const agCb=el("input"); agCb.type="checkbox"; agCb.id="agreeChk";
+  agCb.checked = !!state.info.agree;
+  agCb.onchange=()=>{ state.info.agree = agCb.checked; save(); updateNav();
+    agLab.classList.toggle("on", agCb.checked); };
+  agLab.appendChild(agCb);
+  agLab.appendChild(el("span",null,"위 내용을 확인하였으며, 개인정보 수집·이용에 동의합니다. <b class='req'>(필수)</b>"));
+  agLab.classList.toggle("on", agCb.checked);
+  pv.appendChild(agLab);
+  c.appendChild(pv);
+
   f.appendChild(c);
   return f;
 }
@@ -1115,7 +1506,7 @@ function viewGuide(){
    +"<div><b>②④⑥⑧</b><span>인접한 두 단계의 중간값</span></div>";
   c3.appendChild(tb);
   c3.appendChild(el("h3",null,"응답 일관성(CR) 확인"));
-  c3.appendChild(el("p","lead","한 단계(10문항)를 모두 응답하면 화면 아래에 <b>일관성비율(CR)</b>이 표시됩니다. CR이 <b>0.1 이하</b>여야 신뢰할 수 있는 응답으로 판단합니다."));
+  c3.appendChild(el("p","lead","한 단계(10문항)를 모두 응답하면 화면 아래에 <b>일관성비율(CR)</b>이 표시됩니다. CR이 <b>0.1 이하</b>일 때 신뢰할 수 있는 응답으로 판단하며, 초과하더라도 확인 후 진행하실 수 있습니다."));
   const ex=el("div","notice");
   ex.innerHTML="<b>어긋난 응답의 예</b><br>A가 B보다 2배 중요하고, A가 C보다 4배 중요하다고 응답했다면 <b>B는 C보다 중요</b>해야 합니다. 이때 C를 B보다 중요하다고 응답하면 CR이 높아집니다.";
   c3.appendChild(ex);
@@ -1149,7 +1540,7 @@ function viewBig(){
 
   const box=crBox(bigMatrix, BIGS.length);
   pairsOf(BIGS.length).forEach(([i,j],k)=>{
-    c3.appendChild(scaleRow(i+"-"+j, state.big, i, j, BIGS[i], BIGS[j], "Q"+String(k+1).padStart(2,"0"), ()=>{box.update(); updateNav();}));
+    c3.appendChild(scaleRow(i+"-"+j, state.big, i, j, BIGS[i], BIGS[j], "Q"+String(k+1).padStart(2,"0"), ()=>{box.update(); updateNav(); syncDebug();}));
   });
   c3.appendChild(box);
   f.appendChild(c3);
@@ -1189,7 +1580,7 @@ function viewTasks(bi){
   const box=crBox(()=>taskMatrix(b), items.length);
   pairsOf(items.length).forEach(([i,j],k)=>{
     c3.appendChild(scaleRow(b+"|"+i+"-"+j, state.task, i, j, items[i], items[j],
-      "Q"+String(k+1).padStart(2,"0"), ()=>{box.update(); updateNav();}));
+      "Q"+String(k+1).padStart(2,"0"), ()=>{box.update(); updateNav(); syncDebug();}));
   });
   c3.appendChild(box);
   f.appendChild(c3);
@@ -1272,9 +1663,9 @@ function viewDone(){
     "전문가 활용비 지급 서식은 응답자 정보에 기재해 주신 <b>"+esc(em)+"</b> 로 발송됩니다. "+
     "제출과 동시에 발송되므로 통상 <b>1~2분 이내</b>에 도착합니다."));
   c2.appendChild(el("div","notice",
-    "<b>제출 서류</b><br>받으신 메일에 아래 서류를 첨부해 <b>sksthgpa@inha.edu</b> 로 보내주시면 지급 절차가 진행됩니다."+
+    "<b>제출 서류</b><br>받으신 메일에 아래 서류를 첨부해 <b>그대로 회신</b>해 주시면 지급 절차가 진행됩니다."+
     "<div class='docs'>"+
-    "<span><i>1</i>영수증 <em>첨부 서식에 기재 후 서명 또는 날인</em></span>"+
+    "<span><i>1</i>영수증 <em>첨부된 한글(.hwp) 양식 작성 후 서명 또는 날인</em></span>"+
     "<span><i>2</i>이력서</span>"+
     "<span><i>3</i>통장 사본 <em>예금주가 확인되는 면</em></span>"+
     "<span><i>4</i>신분증 사본</span>"+
@@ -1392,7 +1783,8 @@ function render(){
   else if(s===3) app.appendChild(viewBig());
   else if(s>=4 && s<=3+BIGS.length) app.appendChild(viewTasks(s-4));
   else app.appendChild(viewReview());
-  renderProgress(); renderNav(); renderRankBar();
+  if(s!==flagStep){ flagShown=false; flagStep=s; }
+  renderProgress(); renderNav(); renderRankBar(); syncResetBtn(); bindDebugToggle(); syncDebug();
   if(s===2) watchGuide(); else stopGuide();
   if(s>=3 && s<=3+BIGS.length) watchRankBar(); else stopRankBar();
 }
