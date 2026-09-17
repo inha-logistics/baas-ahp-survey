@@ -749,10 +749,15 @@ function renderNav(){
       if(m){
         toast(m);
         if(state.step>=3 && state.step<=3+BIGS.length){
-          flagShown=true;
-          if(window.__crbox) window.__crbox.update();
-          updateNav();
-          gotoFirstFlag();
+          const nn = state.step===3 ? BIGS.length : TASKS[BIGS[state.step-4]].length;
+          const AA = state.step===3 ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
+          // 일관성비율이 상한을 넘어 막힌 경우에만 강도 표시를 켠다
+          if(AA && crOf(AA)>0.20){
+            flagShown=true;
+            if(window.__crbox) window.__crbox.update();
+            updateNav();
+          }
+          if(document.querySelector(".pair.flag")) gotoFirstFlag();
         }
         return;
       }
