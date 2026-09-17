@@ -898,6 +898,7 @@ function updateNav(){
 }
 
 function go(s){
+  flagShown=false; flagStep=-1;
   state.step=Math.max(0,Math.min(STEPS.length-1,s));
   save(); render();
   window.scrollTo({top:0,behavior:"instant"});
@@ -1246,6 +1247,7 @@ function loadProgress(file){
         throw new Error("형식이 맞지 않습니다");
       if(s.sent) throw new Error("이미 제출이 끝난 파일입니다");
       Object.assign(state, s);
+      flagShown=false; flagStep=-1;
       save(); render();
       toast("이전 응답을 불러왔습니다 ("+answeredCount()+" / 60문항)");
       window.scrollTo({top:0,behavior:"instant"});
@@ -1782,13 +1784,14 @@ async function submit(){
 function render(){
   const app=$("#app"); app.innerHTML="";
   const s=state.step;
+  // 단계가 바뀌면 화면을 그리기 전에 표시 상태를 먼저 초기화한다
+  if(s!==flagStep){ flagShown=false; flagStep=s; }
   if(s===0) app.appendChild(viewIntro());
   else if(s===1) app.appendChild(viewInfo());
   else if(s===2) app.appendChild(viewGuide());
   else if(s===3) app.appendChild(viewBig());
   else if(s>=4 && s<=3+BIGS.length) app.appendChild(viewTasks(s-4));
   else app.appendChild(viewReview());
-  if(s!==flagStep){ flagShown=false; flagStep=s; }
   renderProgress(); renderNav(); renderRankBar(); syncResetBtn(); bindDebugToggle(); syncDebug();
   if(s===2) watchGuide(); else stopGuide();
   if(s>=3 && s<=3+BIGS.length) watchRankBar(); else stopRankBar();
