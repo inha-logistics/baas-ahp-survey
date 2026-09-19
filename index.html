@@ -429,7 +429,7 @@ input.bad:focus{box-shadow:0 0 0 3px rgba(192,57,43,.14)}
 @media (prefers-reduced-motion:reduce){.modalbg,.modalbox{animation:none}}
 
 .dbgbar{display:inline-block;margin-right:10px;padding:2px 9px;border-radius:99px;
-  background:#FDF0D5;border:1px solid #E8C79A;color:#7A4A12;font-size:10.5px;
+  background:#EEF2F8;border:1px solid #C4D0E2;color:#3C4E6B;font-size:10.5px;
   font-variant-numeric:tabular-nums;vertical-align:middle}
 @media(max-width:560px){
   .dbgbar{display:block;margin:0 0 4px;font-size:10px;padding:2px 7px}
@@ -493,8 +493,8 @@ const TASKS={
   {t:"V2G·수요반응 참여 및 차등 요금 모델 개발", short:"V2G·수요반응", sub:"V2G 실증 및 정산 체계 · 수요반응(DR) 자원 등록 · 비피크 차등 요금제 · 하이패스 연계 통합 과금"},
  ],
  "재사용": [
-  {t:"사용후 배터리 기반 ESS 구축 및 운영", short:"ESS 구축·운영", sub:"ESS용 팩 재구성 및 등급별 조합 기준 · 설비 설치 및 안전 기준 확보 · 충방전 운영 알고리즘 · 단계별 도입 규모"},
-  {t:"사용후 배터리 ESS 운영 안전관리 체계 구축", short:"ESS 안전관리", sub:"운영 중 셀 단위 상태 모니터링 · 셀 편차 관리 및 이상 셀 조기 판별 · 화재 예방 운영 기준 · 정기 점검 및 교체"},
+  {t:"사용후 배터리 기반 ESS 구축 및 운영", short:"ESS 구축·운영", sub:"ESS용 팩 재구성 및 등급별 조합 · 설비 설치 및 안전 기준 · 충방전 운영 알고리즘 · 단계별 도입 규모"},
+  {t:"사용후 배터리 ESS 운영 안전관리 체계 구축", short:"ESS 안전관리", sub:"운영 중 셀 단위 상태 모니터링 · 셀 편차 관리 및 이상 셀 판별 · 화재 예방 운영 기준 · 정기 점검 및 교체"},
   {t:"사용후 배터리 기반 전력 공급·거래 사업화", short:"전력 공급·거래", sub:"도로공사 자체 전력 수요 대응 · 외부 수요처 공급 모델 · BSS 기반 전력 저장·판매 · 비피크-피크 차익거래"},
   {t:"SoH 기반 사용후 배터리 가치평가 및 거래 기준 마련", short:"SoH 가치평가", sub:"SoH·잔존수명(RUL) 측정 결과 활용 · 등급별 잔존가치 산정 및 가격 체계 · 재사용전지 안전성 검사제도 연계 · 배터리 여권 연계"},
   {t:"재사용 배터리 수요처 발굴 및 공급 협력", short:"수요처 발굴·공급", sub:"외부 수요처 발굴(발전소·통신·산업체 피크저감) · 성능 등급별 공급 기준 · 공급 계약 조건 · 매입 단가 여건"},
@@ -532,11 +532,12 @@ const state = {
   sid: 'S'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)
 };
 const LSKEY = "ahp_baas_v4";
-/* 주소 뒤에 ?debug 를 붙이면 확인용으로 CR 값을 화면에 표시합니다 (실제 조사에서는 보이지 않음) */
-/* ★ 확인용 CR 표시 ─────────────────────────────
-   true  : 화면에 단계별 CR 값이 보입니다 (테스트용)
-   false : 응답자에게 보이지 않습니다 (실제 조사 배포 시)
-   화면에서 「응답 N / 60」 을 빠르게 3번 눌러도 켜고 끌 수 있습니다. */
+/* 주소 뒤에 ?debug 를 붙여도 CR 표시를 켤 수 있습니다 */
+/* ★ 단계별 CR 표시 ─────────────────────────────
+   true  : 상단에 단계별 일관성비율(CR)이 표시됩니다
+   false : 표시하지 않습니다
+   화면에서 「응답 N / 60」 을 빠르게 3번 눌러도 켜고 끌 수 있습니다.
+   ※ 마지막 검토 화면의 CR 표는 이 설정과 무관하게 항상 표시됩니다. */
 const SHOW_CR = true;
 
 let DEBUG = SHOW_CR || /[?&]debug\b/.test(location.search) || /(^|;)\s*ahpdebug=1/.test(document.cookie);
@@ -680,7 +681,7 @@ function resetAll(){
     }
   });
 }
-/* 「응답 N / 60」 을 빠르게 3번 누르면 확인용 CR 표시가 켜지고 꺼집니다 */
+/* 「응답 N / 60」 을 빠르게 3번 누르면 CR 표시가 켜지고 꺼집니다 */
 let dbgTaps=0, dbgTimer=null;
 function bindDebugToggle(){
   const m=document.querySelector("#topbar .pmeta");
@@ -699,7 +700,7 @@ function bindDebugToggle(){
       const d=document.getElementById("dbg");
       if(!DEBUG && d) d.remove();
       syncDebug(); updateNav();
-      toast(DEBUG ? "확인용 CR 표시를 켰습니다" : "확인용 CR 표시를 껐습니다");
+      toast(DEBUG ? "CR 표시를 켰습니다" : "CR 표시를 껐습니다");
     }
   });
 }
@@ -714,11 +715,11 @@ function syncDebug(){
   const out=[];
   if(state.step>=3 && state.step<=3+BIGS.length){
     const A = state.step===3 ? bigMatrix() : taskMatrix(BIGS[state.step-4]);
-    out.push("이 단계 CR " + (A ? crOf(A).toFixed(3) : "–"));
+    out.push("현재 단계 " + (A ? crOf(A).toFixed(3) : "–"));
   }
   const ab=bigMatrix(); if(ab) out.push("대분류 "+crOf(ab).toFixed(3));
   BIGS.forEach((b,i)=>{ const A=taskMatrix(b); if(A) out.push((i+1)+"군 "+crOf(A).toFixed(3)); });
-  d.textContent = out.length ? ("확인용 · "+out.join(" / ")) : "";
+  d.textContent = out.length ? ("CR · "+out.join(" / ")) : "";
 }
 
 function syncResetBtn(){
@@ -901,7 +902,7 @@ function updateNav(){
       const shown=bad.filter(x=> x.kind==="dir" || flagShown).length;
       if(shown){ msg="표시된 문항 "+shown+"개를 확인해 주십시오"; }
       else { msg="이 단계 응답을 모두 마쳤습니다"; }
-      if(DEBUG && A) msg = "[확인용] CR "+crOf(A).toFixed(3)+" · "+msg;
+      if(DEBUG && A) msg = "CR "+crOf(A).toFixed(3)+" · "+msg;
     }
     hint.textContent=msg;
     hint.className = block ? "hint warn" : ((flagShown && A && conflictPairs(n).length) ? "hint warn" : "hint ok");
@@ -1735,12 +1736,11 @@ function viewDone(){
 
   const c2=el("div","card");
   c2.appendChild(el("h2",null,"전문가 활용비 지급 안내"));
-  const em = (state.info && state.info.email) ? state.info.email : "입력하신 이메일";
   c2.appendChild(el("p","lead",
-    "전문가 활용비 지급 서식은 응답자 정보에 기재해 주신 <b>"+esc(em)+"</b> 로 발송됩니다. "+
-    "제출과 동시에 발송되므로 통상 <b>1~2분 이내</b>에 도착합니다."));
+    "설문 안내를 받으신 <b>메일에 지급 양식이 함께 첨부</b>되어 있습니다. "+
+    "아래 서류를 작성하신 뒤 <b>그 메일에 회신</b>해 주시면 지급 절차가 진행됩니다."));
   c2.appendChild(el("div","notice",
-    "<b>제출 서류</b><br>받으신 메일에 아래 서류를 첨부해 <b>그대로 회신</b>해 주시면 지급 절차가 진행됩니다."+
+    "<b>제출 서류</b>"+
     "<div class='docs'>"+
     "<span><i>1</i>영수증 <em>첨부된 한글(.hwp) 양식 작성 후 서명 또는 날인</em></span>"+
     "<span><i>2</i>이력서</span>"+
@@ -1749,10 +1749,206 @@ function viewDone(){
     "</div>"+
     "<span class='pnote'>제출하신 서류와 개인정보는 전문가 활용비 집행 목적으로만 사용되며, 지급 처리 후 관계 규정에 따라 보관·파기됩니다.</span>"));
   c2.appendChild(el("div","notice warn",
-    "<b>메일이 도착하지 않는 경우</b><br>"+
-    "10분이 지나도 메일이 확인되지 않으면 먼저 <b>스팸메일함</b>과 <b>프로모션·전체메일함</b>을 확인해 주십시오. "+
-    "그래도 수신되지 않은 경우, 메일 주소 오기입 또는 수신 차단일 수 있으므로 아래 문의처로 연락 주시면 "+
-    "확인 후 재발송하겠습니다."));
+    "<b>안내가 오지 않는 경우</b><br>"+
+    "며칠 내 안내가 없으시면 <b>스팸메일함</b>과 <b>프로모션·전체메일함</b>을 먼저 확인해 주십시오. "+
+    "그래도 확인되지 않으시면 메일 주소 오기입일 수 있으므로 아래 문의처로 연락 주시기 바랍니다."));
+  f.appendChild(c2);
+
+  /* 3. 응답 방법 */
+  const c3=el("div","card");
+  c3.appendChild(el("h2",null,"3. 응답 방법 · 체크하는 요령"));
+  c3.appendChild(el("p","lead","왼쪽 항목과 오른쪽 항목 중 <b>더 중요한 쪽으로 갈수록 큰 숫자</b>를 클릭합니다. 두 항목이 동등하면 가운데 ①을 선택합니다."));
+  const demo=el("div","demo");
+  demo.innerHTML =
+    '<div class="dhead"><span>① 배터리 교환 스테이션(BSS) 구축 및 실증</span>'
+    +'<span class="dvs">대(對)</span><span class="dr">② 충전 인프라 확충 및 수전 설비 증설</span></div>'
+    +'<div class="dscale">'
+    +'<span class="dend">A가<br>중요</span>'
+    +[9,8,7,6,5,4,3,2].map(n=>'<span class="dc">'+"⑨⑧⑦⑥⑤④③②".charAt(9-n)+'</span>').join("")
+    +'<span class="dc mid on">①</span>'
+    +[2,3,4,5,6,7,8,9].map(n=>'<span class="dc">'+"②③④⑤⑥⑦⑧⑨".charAt(n-2)+'</span>').join("")
+    +'<span class="dend">B가<br>중요</span></div>'
+    +'<div class="dfoot"><span>◀ 절대중요</span><span>같다</span><span>절대중요 ▶</span></div>';
+  c3.appendChild(demo);
+  const tb=el("div","scaletbl");
+  tb.innerHTML =
+    "<div><b>①</b><span>두 항목이 동등하게 중요</span></div>"
+   +"<div><b>③</b><span>약간 더 중요</span></div>"
+   +"<div><b>⑤</b><span>중요</span></div>"
+   +"<div><b>⑦</b><span>매우 중요</span></div>"
+   +"<div><b>⑨</b><span>절대적으로 중요</span></div>"
+   +"<div><b>②④⑥⑧</b><span>인접한 두 단계의 중간값</span></div>";
+  c3.appendChild(tb);
+  c3.appendChild(el("h3",null,"응답 일관성(CR) 확인"));
+  c3.appendChild(el("p","lead","한 단계(10문항)를 모두 응답하면 화면 아래에 <b>일관성비율(CR)</b>이 표시됩니다. CR이 <b>0.1 이하</b>일 때 신뢰할 수 있는 응답으로 판단하며, 초과하더라도 확인 후 진행하실 수 있습니다."));
+  const ex=el("div","notice");
+  ex.innerHTML="<b>어긋난 응답의 예</b><br>A가 B보다 2배 중요하고, A가 C보다 4배 중요하다고 응답했다면 <b>B는 C보다 중요</b>해야 합니다. 이때 C를 B보다 중요하다고 응답하면 CR이 높아집니다.";
+  c3.appendChild(ex);
+  c3.appendChild(el("p","dim","※ 각 단계는 「중요도 순위 지정 → 쌍대비교」 순으로 진행됩니다. 순위를 먼저 정하고 그에 맞춰 비교하시면 CR을 쉽게 맞출 수 있습니다."));
+  f.appendChild(c3);
+
+  return f;
+}
+
+function viewBig(){
+  const f=document.createDocumentFragment();
+  const c=el("div","card");
+  c.appendChild(el("h1",null,"Ⅱ. 대분류 우선순위"));
+  c.appendChild(el("p","sub","배터리 순환체계 5개 대분류의 상대적 중요도를 비교하는 문항입니다. 향후 10~20년간 한국도로공사의 신규 성장동력 확보 관점에서 평가해 주십시오."));
+  BIGS.forEach(b=>{
+    const d=el("div","notice"); d.style.marginBottom="8px";
+    d.innerHTML="<b>"+esc(b)+"</b> · "+esc(BIGDESC[b]);
+    c.appendChild(d);
+  });
+  f.appendChild(c);
+
+  const c2=el("div","card");
+  c2.appendChild(el("h2",null,"1단계 · 중요도 순위 지정"));
+  c2.appendChild(el("p","sub","먼저 5개 항목에 1위부터 5위까지 순위를 지정해 주십시오. 같은 순위를 두 번 쓸 수 없습니다. 아래 쌍대비교는 이 순위와 어긋나지 않게 응답하시면 일관성이 확보됩니다."));
+  c2.appendChild(rankTable(BIGS, state.rankBig, "big"));
+  f.appendChild(c2);
+
+  const c3=el("div","card");
+  c3.id="paircard";
+  c3.appendChild(el("h2",null,"2단계 · 쌍대비교 (10문항)"));
+
+  const box=crBox(bigMatrix, BIGS.length);
+  pairsOf(BIGS.length).forEach(([i,j],k)=>{
+    c3.appendChild(scaleRow(i+"-"+j, state.big, i, j, BIGS[i], BIGS[j], "Q"+String(k+1).padStart(2,"0"), ()=>{box.update(); updateNav(); syncDebug();}));
+  });
+  c3.appendChild(box);
+  f.appendChild(c3);
+  return f;
+}
+
+function viewTasks(bi){
+  const b=BIGS[bi];
+  const items=TASKS[b].map(x=>x.t);
+  const f=document.createDocumentFragment();
+
+  const c=el("div","card");
+  c.appendChild(el("h1",null,"Ⅲ-"+(bi+1)+". "+b+" 추진과제"));
+  c.appendChild(el("p","sub",esc(BIGDESC[b])));
+  const t=el("div","rank");
+  const h=el("div","rr");
+  h.appendChild(el("div","rc rh","추진과제")); h.appendChild(el("div","rc rh n","No"));
+  t.appendChild(h);
+  TASKS[b].forEach((x,i)=>{
+    const r=el("div","rr");
+    r.appendChild(el("div","rc","<b>"+esc(x.t)+"</b><br><span style='color:var(--gray);font-size:12px'>"+esc(x.sub)+"</span>"));
+    r.appendChild(el("div","rc n",NUM[i]));
+    t.appendChild(r);
+  });
+  c.appendChild(t);
+  f.appendChild(c);
+
+  const c2=el("div","card");
+  c2.appendChild(el("h2",null,"1단계 · 중요도 순위 지정"));
+  c2.appendChild(el("p","sub","먼저 5개 추진과제에 1위부터 5위까지 순위를 지정해 주십시오. 같은 순위를 두 번 쓸 수 없습니다."));
+  c2.appendChild(rankTable(items, state.rankTask, b));
+  f.appendChild(c2);
+
+  const c3=el("div","card");
+  c3.id="paircard";
+  c3.appendChild(el("h2",null,"2단계 · 쌍대비교 (10문항)"));
+  const box=crBox(()=>taskMatrix(b), items.length);
+  pairsOf(items.length).forEach(([i,j],k)=>{
+    c3.appendChild(scaleRow(b+"|"+i+"-"+j, state.task, i, j, items[i], items[j],
+      "Q"+String(k+1).padStart(2,"0"), ()=>{box.update(); updateNav(); syncDebug();}));
+  });
+  c3.appendChild(box);
+  f.appendChild(c3);
+  return f;
+}
+
+function viewReview(){
+  const f=document.createDocumentFragment();
+  const R=computeResult();
+
+  const c=el("div","card");
+  c.appendChild(el("h1",null,"Ⅳ. 응답 검토 및 제출"));
+  if(!R){
+    c.appendChild(el("p","sub","응답하지 않은 문항이 있어 결과를 산출할 수 없습니다. 이전 단계로 돌아가 남은 문항에 응답해 주십시오."));
+    f.appendChild(c); return f;
+  }
+  c.appendChild(el("p","sub","입력하신 응답으로 산출한 결과입니다. 제출 전 일관성비율(CR)을 확인해 주십시오."));
+
+  const cb=el("div","crbox");
+  const bad=R.bigCR>0.1 || R.groups.some(g=>g.cr>0.1);
+  cb.appendChild(el("span","badge "+(bad?"no":"ok"), bad?"일부 단계 CR 초과":"전 단계 CR 양호"));
+  cb.appendChild(el("div","txt", bad
+    ? "CR이 0.1을 초과한 단계가 있습니다. 그대로 제출하실 수 있으나, 이전 단계에서 응답을 조정하시면 분석 신뢰도가 높아집니다."
+    : "모든 단계에서 CR이 0.1 이하로 유지되었습니다."));
+  c.appendChild(cb);
+
+  const t1=el("table","res");
+  t1.innerHTML="<tr><th>단계</th><th>가중치</th><th>CR</th></tr>";
+  const r0=el("tr");
+  r0.innerHTML="<td>대분류 5개 비교</td><td class='n'>–</td><td class='n'>"+R.bigCR.toFixed(3)+
+    (R.bigCR>0.1?" ⚠":"")+"</td>";
+  t1.appendChild(r0);
+  R.groups.forEach(g=>{
+    const tr=el("tr");
+    tr.innerHTML="<td>"+esc(g.big)+"</td><td class='n'>"+(g.w*100).toFixed(1)+"%</td><td class='n'>"+
+      g.cr.toFixed(3)+(g.cr>0.1?" ⚠":"")+"</td>";
+    t1.appendChild(tr);
+  });
+  c.appendChild(t1);
+  f.appendChild(c);
+
+  const c2=el("div","card");
+  c2.appendChild(el("h2",null,"추진과제 우선순위 (본인 응답 기준)"));
+  c2.appendChild(el("p","sub","대분류 가중치 × 과제 가중치로 산출한 25개 과제의 종합 순위입니다."));
+  const t2=el("table","res");
+  t2.innerHTML="<tr><th style='width:42px'>순위</th><th>추진과제</th><th style='width:90px'>대분류</th><th style='width:72px'>가중치</th><th style='width:78px'></th></tr>";
+  const max=R.rows[0].gw;
+  R.rows.forEach(r=>{
+    const tr=el("tr");
+    tr.innerHTML="<td class='n'><b>"+r.rank+"</b></td><td>"+esc(r.t)+"</td><td class='n' style='font-size:12px'>"+
+      esc(r.big)+"</td><td class='n'>"+(r.gw*100).toFixed(2)+"%</td>"+
+      "<td><div class='bar'><div style='width:"+(r.gw/max*100).toFixed(1)+"%'></div></div></td>";
+    t2.appendChild(tr);
+  });
+  c2.appendChild(t2);
+  f.appendChild(c2);
+
+  const c3=el("div","card tight");
+  c3.appendChild(el("div","notice",
+    "<b>제출 안내</b><br>아래 「응답 제출」을 누르면 응답이 연구진에게 전송됩니다. 제출 후에는 수정할 수 없으므로 검토 후 진행해 주십시오."));
+  f.appendChild(c3);
+  return f;
+}
+
+function viewDone(){
+  const f=document.createDocumentFragment();
+
+  const c=el("div","card");
+  c.innerHTML =
+    "<h1>제출이 완료되었습니다</h1>"+
+    "<p class='lead'>바쁘신 중에도 설문에 응답해 주셔서 진심으로 감사드립니다. "+
+    "보내주신 의견은 「전기차 시대 배터리 순환체계에 따른 고속도로 인프라 활용전략 수립 연구」에 반영하겠습니다.</p>"+
+    "<p class='lead'>응답 내용은 통계법 제33조에 따라 엄격히 보호되며, 연구 목적 외의 용도로는 사용되지 않습니다.</p>";
+  f.appendChild(c);
+
+  const c2=el("div","card");
+  c2.appendChild(el("h2",null,"전문가 활용비 지급 안내"));
+  c2.appendChild(el("p","lead",
+    "설문 안내를 받으신 <b>메일에 지급 양식이 함께 첨부</b>되어 있습니다. "+
+    "아래 서류를 작성하신 뒤 <b>그 메일에 회신</b>해 주시면 지급 절차가 진행됩니다."));
+  c2.appendChild(el("div","notice",
+    "<b>제출 서류</b>"+
+    "<div class='docs'>"+
+    "<span><i>1</i>영수증 <em>첨부된 한글(.hwp) 양식 작성 후 서명 또는 날인</em></span>"+
+    "<span><i>2</i>이력서</span>"+
+    "<span><i>3</i>통장 사본 <em>예금주가 확인되는 면</em></span>"+
+    "<span><i>4</i>신분증 사본</span>"+
+    "</div>"+
+    "<span class='pnote'>제출하신 서류와 개인정보는 전문가 활용비 집행 목적으로만 사용되며, 지급 처리 후 관계 규정에 따라 보관·파기됩니다.</span>"));
+  c2.appendChild(el("div","notice warn",
+    "<b>안내 메일을 찾지 못하시는 경우</b><br>"+
+    "설문 링크를 보내드린 메일에 양식이 첨부되어 있습니다. "+
+    "메일을 찾기 어려우시면 <b>스팸메일함</b>과 <b>프로모션·전체메일함</b>을 확인해 주시고, "+
+    "그래도 확인되지 않으시면 아래 문의처로 연락 주시기 바랍니다."));
   f.appendChild(c2);
 
   const c3=el("div","card");
